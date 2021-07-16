@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Finval;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query\Parameter;
 
 /**
  * @method Finval|null find($id, $lockMode = null, $lockVersion = null)
@@ -18,7 +20,24 @@ class FinvalRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Finval::class);
     }
+    
+    
+ public function findByCompany(int $indicatorID, int $companyID): array {
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+                'SELECT  f.reportedDate, f.finValue FROM App\Entity\Finval f '
+                . 'WHERE f.indicatorID=:indicatorID '
+                . 'AND f.companyID=:companyID '
+                . 'ORDER BY f.reportedDate DESC'
+        );
 
+        $query->setParameters(new ArrayCollection([
+                    new Parameter(':indicatorID', $indicatorID),
+                    new Parameter(':companyID', $companyID)
+        ]));
+
+        return $query->getResult();
+    }
     // /**
     //  * @return Finval[] Returns an array of Finval objects
     //  */

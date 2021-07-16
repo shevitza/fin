@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Fin Home{% endblock %}
+ {% block stylesheets %}
+            {#{{ encore_entry_link_tags('app') }}#}
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" >
+            
+        {% endblock %}
+{% block body %}
+    <style>
+        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+        .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    </style>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <table class="table">
+                    <tr><th>Indicator Name</th>
+                        {% for c in company %}
+                            <th> {{ c.id }} {{ c.companyName }}</th>
+                            {% endfor %}
+                    </tr>
+                    {% for i in indicator %}
+                        <tr>
+                            <td>{{ i.id }}  {{ i.indicatorName }}</td>  
+                                {% for c in company %}
+                                    <td> 
+                                        <a href="reportByCompany/{{ i.id }}/{{ c.id }}">{{ c.id }} /{{ i.id }}</a>
+</a>
+                                    
+                                    </td>
+                                {% endfor %}
+                        </tr>
+                    {% endfor %}
+
+                </table>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+

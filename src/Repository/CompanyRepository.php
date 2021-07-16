@@ -5,7 +5,8 @@ namespace App\Repository;
 use App\Entity\Company;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query\Parameter;
 /**
  * @method Company|null find($id, $lockMode = null, $lockVersion = null)
  * @method Company|null findOneBy(array $criteria, array $orderBy = null)
@@ -47,4 +48,14 @@ class CompanyRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function companyName(int $companyID): array {
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+                'SELECT c.companyName '
+                . 'FROM App\Entity\Company c '
+                . 'WHERE c.id = :companyID'
+                );
+        $query->setParameter(':companyID', $companyID);
+        return $query->getResult();
+    }
 }

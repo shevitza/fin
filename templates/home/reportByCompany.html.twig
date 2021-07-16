@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Report By Company {{ companyID}}{% endblock %}
+        {% block stylesheets %}
+            {#{{ encore_entry_link_tags('app') }}#}
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" >
+            
+        {% endblock %}
+         {% block javascripts %}
+            {#{{ encore_entry_script_tags('app') }}#}
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        {% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+
+            <div class="col-10">
+                <h2>{{ companyID }} {{ companyName }}, {{ indicatorName }}</h2>
+                <a href="/" class="btn btn-link">Home</a>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-4" id="table" >
+                <table class="table table-bordered table-condensed">
+                    <tr>
+                        <th>Date</th> 
+                        <th>{{ indicatorName }}</th>
+                    </tr>   
+                    {% for f in finvalues %}
+                        <tr> 
+                            <td>{{ f.strDate }}</td>                
+                            <td class="datavalue">
+                                {% if percentage==0 %}
+                                    {{ f.finValue|number_format(0, '.', ' ') }}
+                                {% else %}
+                                    {{100* f.finValue|number_format(5, '.', ' ') }}%
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
+            </div>
+
+            <div class="col-8" >
+                <div id="chartdata" data-data-val='{{ data|json_encode()}}'></div>
+                <div id="chartlabels" data-data-labels='{{ labels|json_encode()}}'></div>  
+                <canvas id="myChart" ></canvas>
+
+
+
+                <script>   
+                    const dataval = document.
+                            querySelector('#chartdata').
+                            dataset.
+                            dataVal.
+                            substring(1).slice(0, -1);
+                    datavalarr = dataval.split(",").reverse();
+                    console.log(dataval);                    
+                    const labels = document.querySelector('#chartlabels').dataset.dataLabels.substring(1).slice(0, -1);
+                    labelsarr = labels.split(",").reverse();
+                    console.log(labels);
+   
+                    
+                    var ctx = document.getElementById('myChart');
+                    var myChart = new Chart(ctx, {
+                       
+                        type: 'bar',
+                       
+                        data: {                           
+                            labels: labelsarr,
+                            datasets: [{
+                                    label: 'Indicator Values',
+                                    data: datavalarr, 
+                                backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+               
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+               
+            ],
+            borderWidth: 1}]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: false
+                                }
+                            }
+                        }
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+{% endblock %}
