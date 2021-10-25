@@ -64,7 +64,7 @@ class HomeController extends AbstractController {
         }
        
         return $this->render('home/reportByCompany.html.twig',
-                        ['companyID' => 100,
+                        ['companyID' => $companyID,
                             'finvalues' => $finvalues,
                             'companyName' => $companyName[0]['companyName'],
                             'indicatorName' => $indicatorName[0]['indicatorName'],
